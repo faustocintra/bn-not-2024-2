@@ -1,0 +1,12 @@
+{
+  "name": "bn-not-2024-2",
+  "version": "1.0.0",
+  "description": "Repositório da disciplina Banco de Dados - Não Relacional, 3º semestre DSM Fatec Franca 2024/2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
