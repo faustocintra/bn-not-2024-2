@@ -15,7 +15,8 @@
   "devDependencies": {
     "eslint": "^9.8.0",
     "nodemon": "^3.1.4",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "prisma": "^5.19.1"
   },
   "type": "module"
 }
