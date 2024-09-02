@@ -1,0 +1,21 @@
+{
+  "name": "back-end",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon ./src/bin/server.js",
+    "start": "node ./src/bin/server.js"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.8.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  },
+  "type": "module"
+}

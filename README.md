@@ -1,2 +1,12 @@
-# bn-not-2024-2
-Repositório da disciplina Banco de Dados - Não Relacional, 3º semestre DSM Fatec Franca 2024/2
+# Criação do projeto back-end
+
+Executar no terminal:
+
+    npx aka-demy/create-express-app
+
+Perguntas feitas pelo comando:
+*  OK to proceed? ~~> y
+*  Give a name for the app ~~>  back-end
+*  Choose a language ~~>  JavaScript
+*  Choose a template engine ~~>  None
+*  Choose a package manager ~~>  npm
