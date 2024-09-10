@@ -26,7 +26,7 @@ model Cliente {
   email             String        @unique
   logradouro        String
   num_casa          String
-  complemento       String
+  complemento       String?
   bairro            String
   municipio         String
   uf                String
@@ -36,13 +36,13 @@ model Cliente {
 
 model fornecedor {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  razao_socila      String
+  razao_social      String
   nome_fantasia     String
   cnpj              String   @unique
   email             String   @unique
   logradouro        String
   num_casa          String
-  complemento       String
+  complemento       String?
   bairro            String
   municipio         String
   uf                String
