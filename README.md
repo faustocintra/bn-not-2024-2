@@ -34,4 +34,8 @@ npx prisma init
 Toda vez que o arquivo schema.prisma é modificado, é necessário executar o
  seguinte comando no terminal:
 
+<<<<<<< HEAD
 npx prisma generate
+=======
+npx prisma generate
+>>>>>>> dd91aee60fd60d8382b8d8adc423fa0fb10ad310
