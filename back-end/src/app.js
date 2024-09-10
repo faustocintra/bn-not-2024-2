@@ -2,9 +2,9 @@ import express, { json, urlencoded } from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 
-import indexRouter from './routes/index.js'
-import usersRouter from './routes/users.js'
-import categoriasRouter from './routes/categorias.js'
+import clienteRouter from './routes/cliente.js'
+import categoriaRouter from './routes/categoria.js'
+import fornecedorRouter from './routes/fornecedor.js'
 
 const app = express()
 
@@ -13,8 +13,8 @@ app.use(json())
 app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
 
-app.use('/', indexRouter)
-app.use('/users', usersRouter)
-app.use('/categoria', categoriasRouter)
+app.use('/categoria', categoriaRouter)
+app.use('/cliente', clienteRouter)
+app.use('/fornecedor', fornecedorRouter)
 
 export default app
