@@ -14,7 +14,7 @@ datasource db {
 }
 
 //Montando os Schemas para Categoria
-model Categorias {
+model Categoria {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   descricao String
 }
