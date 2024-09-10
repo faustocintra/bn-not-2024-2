@@ -22,7 +22,7 @@ model Cliente {
   id              String          @id @default(auto()) @map("_id") @db.ObjectId
   nome            String
   cpf             String          @unique
-  data_nascimento DateTime
+  data_nascimento DateTime?
   email           String          @unique
   logradouro      String 
   num_casa        String
