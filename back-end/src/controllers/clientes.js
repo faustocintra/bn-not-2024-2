@@ -8,7 +8,7 @@ controller.create = async function (req, res) {
         Conecta-se ao BD e envia uma instrução de criação
         de um novo documento, com os dados que estão dentro da req.body
         */
-        await prisma.categoria.create({ data: req.body });
+        await prisma.cliente.create({ data: req.body });
 
         // Envia uma resposta de sucesso ao front-end
         // HTTP 201: Created
@@ -27,7 +27,7 @@ controller.create = async function (req, res) {
 controller.retrieveAll = async function(req, res) {
     try {
         // Manda buscar os dados do servidor
-        const result = await prisma.categoria.findMany({
+        const result = await prisma.cliente.findMany({
             orderBy: [{ descricao: 'asc'}]
         })
 
@@ -48,7 +48,7 @@ controller.retrieveOne = async function(req, res) {
         // Manda buscar o documento no servidor usando
         // Como critério de busca um id informado no
         // Parâmetro da requisição
-        const result = await prisma.categoria.findUnique({
+        const result = await prisma.cliente.findUnique({
             where: { id: req.paramns.id }
         })
 
@@ -70,7 +70,7 @@ controller.update = async function(req, res) {
         // Manda buscar o documento no servidor usando
         // Como critério de busca um id informado no
         // Parâmetro da requisição
-        const result = await prisma.categoria.update({
+        const result = await prisma.cliente.update({
             where: { id: req.paramns.id },
             data: req.body
         })
@@ -93,7 +93,7 @@ controller.delete = async function(req, res) {
         // Manda buscar o documento no servidor usando
         // Como critério de busca um id informado no
         // Parâmetro da requisição
-        const result = await prisma.categoria.delete({
+        const result = await prisma.cliente.delete({
             where: { id: req.paramns.id }
         })
 
