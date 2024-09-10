@@ -13,3 +13,5 @@ prisma.$on('query', event => {
 })
 
 export default prisma
+
+

@@ -34,7 +34,7 @@ model Cliente {
     celular           String
     }
 
-model Fornevcedor {
+model Fornecedor {
     id                String      @id @default(auto()) @map("_id") @db.ObjectId
     razao_social      String
     nome_fantasia     String
@@ -49,3 +49,5 @@ model Fornevcedor {
     cep               String
     celular           String
     }
+
+  
