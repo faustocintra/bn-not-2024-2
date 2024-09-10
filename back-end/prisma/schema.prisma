@@ -15,6 +15,7 @@ datasource db {
 
 model Categoria {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  descricao String
 }
 
 model Cliente {
