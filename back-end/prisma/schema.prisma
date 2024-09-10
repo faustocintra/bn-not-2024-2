@@ -21,7 +21,7 @@ model Categorias {
 
 //Schemas - Cliente
 model Cliente {
-  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
   nome            String
   cpf             String @unique
   data_nascimento DateTime?
@@ -35,3 +35,21 @@ model Cliente {
   cep             String
   celular         String
 }
+
+//Schemas - fornecedores
+model Fornecedor {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  razao_social    String 
+  nome_fantasia   String?
+  cnpj            String @unique
+  email           String @unique
+  logradouro      String
+  num_casa        String
+  complemento     String?
+  bairro          String
+  municipio       String
+  uf              String
+  cep             String
+  celular         String
+}
+
