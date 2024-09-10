@@ -24,7 +24,7 @@ model Cliente{
   cpf             String    @unique
   data_nascimento DateTime?
   email           String    @unique
-  logadouro       String
+  logradouro       String
   num_casa        String
   complemento     String?
   bairro          String
@@ -40,7 +40,7 @@ model Fornecedor{
   nome_fantasia   String    
   cnpj            String    @unique
   email           String    @unique
-  logadouro       String
+  logradouro       String
   num_casa        String
   complemento     String?
   bairro          String
