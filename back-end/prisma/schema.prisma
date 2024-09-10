@@ -14,38 +14,38 @@ datasource db {
 }
 
 model Categoria {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  descricao         String
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  descricao String
 }
 
 model Cliente {
-  id                String       @id @default(auto()) @map("_id") @db.ObjectId
-  nome              String
-  cpf               String       @unique
-  data_nascimento   DateTime?
-  email             String       @unique
-  logradouro        String
-  num_casa          String
-  complemento       String
-  bairro            String
-  municipio         String
-  uf                String
-  cep               String
-  celular           String
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  nome            String
+  cpf             String      @unique
+  data_nascimento DateTime?
+  email           String      @unique
+  logradouro      String
+  num_casa        String
+  complemento     String?
+  bairro          String
+  municipio       String
+  uf              String
+  cep             String
+  celular         String
 }
 
 model Fornecedor {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  razao_social      String
-  nome_fantasia     String?
-  cnpj              String      @unique
-  email             String      @unique
-  logradouro        String
-  num_casa          String
-  complemento       String?
-  bairro            String
-  municipio         String
-  uf                String
-  cep               String
-  celular           String
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  razao_social    String
+  nome_fantasia   String?
+  cnpj            String     @unique
+  email           String     @unique
+  logradouro      String
+  num_casa        String
+  complemento     String?
+  bairro          String
+  municipio       String
+  uf              String
+  cep             String
+  celular         String
 }
