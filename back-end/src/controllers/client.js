@@ -8,7 +8,7 @@ controller.create = async function (req,res) {
         criação de um novo documento, com os dados 
         que estão dentro de req.body */
 
-        await prisma.categoria.create({data:req.body})
+        await prisma.client.create({data:req.body})
 
         // envia uma resposta de sucesso ao front-end
         // HTTP 201: Created
@@ -28,8 +28,8 @@ controller.create = async function (req,res) {
     
 controller.retrieveALL = async function (req,res) {
     try{
-        const result = await prisma.categoria.findMany({
-            orderBy: [{descricao: 'asc'}]
+        const result = await prisma.client.findMany({
+            orderBy: [{nome: 'asc'}]
         })
 
         res.send(result)
@@ -41,7 +41,7 @@ controller.retrieveALL = async function (req,res) {
 
 controller.retrieveOne = async function(req, res) {
     try {
-        const result = await prisma.categoria.findUnique({
+        const result = await prisma.client.findUnique({
             where: {id: req.params.id},
         })
 
@@ -56,7 +56,7 @@ controller.retrieveOne = async function(req, res) {
 
 controller.update = async function(req, res) {
     try {
-        await prisma.categoria.update({
+        await prisma.client.update({
             where: {id: req.params.id},
             data: req.body,
         })
@@ -72,7 +72,7 @@ controller.update = async function(req, res) {
 
 controller.delete = async function(req, res) {
     try {
-        await prisma.categoria.delete({
+        await prisma.client.delete({
             where: {id: req.params.id},
         })
 }catch(err){
