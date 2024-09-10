@@ -26,7 +26,7 @@ model Cliente{
   email            String  @unique
   logradouro       String
   num_casa         String
-  complemento      String
+  complemento      String?
   bairro           String
   municipio        String
   uf               String
@@ -42,7 +42,7 @@ model Fornecedor{
   email            String  @unique
   logradouro       String
   num_casa         String
-  complemento      String
+  complemento      String?
   bairro           String
   municipio        String
   uf               String
