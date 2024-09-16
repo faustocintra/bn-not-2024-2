@@ -13,12 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//Montando os Schemas para Categoria
-model Categoria {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  descricao String
-}
-
 //Schemas - Cliente
 model Cliente {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
@@ -51,5 +45,26 @@ model Fornecedor {
   uf              String
   cep             String
   celular         String
+}
+
+//Montando os Schemas para Categoria
+model Categoria {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  descricao String
+  produtos Produtos[]
+}
+
+//Schemas - Produtos
+model Produtos {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  nome            String
+  marca           String
+  especificacao   String?
+  quantidade      Float           /// Quantidade na embalagem
+  unidade_medida  String
+  preco_unitario  Float
+  qtd_estoque     Float
+  categoria_id    String @db.ObjectId
+  categoria       Categoria @relation(fields: [categoria_id], references: [id])
 }
 
