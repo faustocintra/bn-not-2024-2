@@ -51,11 +51,11 @@ model Fornecedor {
 model Categoria {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   descricao String
-  produtos Produtos[]
+  produtos Produto[]
 }
 
 //Schemas - Produtos
-model Produtos {
+model Produto {
   id              String @id @default(auto()) @map("_id") @db.ObjectId
   nome            String
   marca           String

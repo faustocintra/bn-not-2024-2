@@ -29,6 +29,7 @@ controller.retrieveAll = async function(req, res) {
   try {
     // Manda buscar os dados no servidor
     const result = await prisma.produto.findMany({
+      include: { categoria: true} ,
       orderBy: [ { nome: 'asc' } ]
     })
 
@@ -52,7 +53,9 @@ controller.retrieveOne = async function(req, res) {
     // como critério de busca um id informado no
     // parâmetro da requisição
     const result = await prisma.produto.findUnique({
-      where: { id: req.params.id }
+      where: { id: req.params.id ,
+      include: { categoria: true} 
+      }
     })
 
     // Encontrou o documento ~> retorna HTTP 200: OK (implícito)
