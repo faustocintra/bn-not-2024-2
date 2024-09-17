@@ -8,7 +8,7 @@ controller.create = async function(req, res){
         /*
          Conecta-se ao Bd e envia uma instrução de criação de um novo documento, com os dados que estão dentro de req.body
         */
-       await prisma.categoria.create({ data: req.body })
+       await prisma.produto.create({ data: req.body })
 
        // Envia uma resposta de sucesso ao front_end
        // HTTP 201: Created
@@ -29,9 +29,9 @@ controller.retrieveAll = async function(req, res){
         const include = includeRelatiosn(req.query)
 
         // Manda buscar os dados no servidor
-        const result = await prisma.categoria.findMany({
-            orderBy: [ { descricao: 'asc' } ],
-            include
+        const result = await prisma.produto.findMany({
+            include,
+            orderBy: [ { nome: 'asc' } ]
         })
         // Retorna os dados obtidos ao cliente com o status HTTP 200: OK (Implícito)
         res.send(result)
@@ -50,9 +50,9 @@ controller.retrieveOne = async function (req, res) {
         const include = includeRelatiosn(req.query)
 
         // Manda buscar o documento no servidor usando como critério de busca um id informado no parâmetro da requisição.
-        const result = await prisma.categoria.findUnique({
-            where: { id: req.params.id },
-            include
+        const result = await prisma.produto.findUnique({
+            include,
+            where: { id: req.params.id }
         })
 
         // Encontrou o documento ~> retorna HTTP 200: OK (implícito)
@@ -73,7 +73,7 @@ controller.update = async function (req, res) {
     try{
         // Busca  o documento pelo id passado como parâmetro e, caso o documento seja encontrado, 
         //atualiza-o com as informações passadas em req.body
-        const result = await prisma.categoria.update({
+        const result = await prisma.produto.update({
             where: { id: req.params.id },
             data: req.body
         })
@@ -94,7 +94,7 @@ controller.update = async function (req, res) {
 controller.delete = async function (req, res) {
     try{
         // Busca o documento a ser excluído pelo id passado como parâmetro e efetua a exclusão caso encontrado
-        await prisma.categoria.delete({
+        await prisma.produto.delete({
             where: { id: req.params.id }
         })
         // Encontrou e excluiu ~> HTTP 204: No Content
