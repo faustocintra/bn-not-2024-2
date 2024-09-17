@@ -16,6 +16,7 @@ datasource db {
 model Categoria{
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   descricao   String 
+  produtos Produto[]
   
 }
 
@@ -50,4 +51,29 @@ model Fornecedor{
   uf                  String
   cep                 String
   celular             String
+
+  Produto Produto[]
 }
+
+model Produto{
+  id                  String        @id @default(auto()) @map("_id") @db.ObjectId
+  nome                String
+  marca               String
+  especificacao       String?
+  quantidade          Float  //quant na embalagem 
+  unidade_medida      String
+  preco_unitario      Float
+  qtd_estoue          Float
+  categoria_id        String       @db.ObjectId
+  categoria           Categoria    @relation(fields: [categoria_id], references: [id])
+  fornecedor_id       String?       @db.ObjectId
+  fornecedor          Fornecedor?  @relation(fields: [fornecedor_id], references: [id])
+}
+
+// type ItemVenda{
+//   num_item      Int
+//   quantidade    Float
+//   produto_id   String
+//   produto  Produto  @relation(fields: [produto_id],references: [id])
+
+// }

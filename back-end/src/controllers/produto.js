@@ -8,7 +8,7 @@ controller.create = async function (req,res) {
         criação de um novo documento, com os dados 
         que estão dentro de req.body */
 
-        await prisma.categoria.create({data:req.body})
+        await prisma.produto.create({data:req.body})
 
         // envia uma resposta de sucesso ao front-end
         // HTTP 201: Created
@@ -27,20 +27,11 @@ controller.create = async function (req,res) {
     } 
     
 controller.retrieveALL = async function (req,res) {
-
-    const include ={}
-
-    if (req.query.include){
-        const relations = req.query.include.slip(',')
-
-        for(let rel of relations){
-            include[rel] = true
-    }}
-
     try{
-        const result = await prisma.categoria.findMany({
-            include,
-            orderBy: [{descricao: 'asc'}]
+        
+        const result = await prisma.produto.findMany({
+            include: {"categoria":true},
+            orderBy: [{nome: 'asc'}]
         })
 
         res.send(result)
@@ -52,8 +43,8 @@ controller.retrieveALL = async function (req,res) {
 
 controller.retrieveOne = async function(req, res) {
     try {
-        const result = await prisma.categoria.findUnique({
-            include,
+        const result = await prisma.produto.findUnique({
+            include: {"categoria":true},
             where: {id: req.params.id},
         })
 
@@ -68,7 +59,7 @@ controller.retrieveOne = async function(req, res) {
 
 controller.update = async function(req, res) {
     try {
-        await prisma.categoria.update({
+        await prisma.produto.update({
             where: {id: req.params.id},
             data: req.body,
         })
@@ -84,7 +75,7 @@ controller.update = async function(req, res) {
 
 controller.delete = async function(req, res) {
     try {
-        await prisma.categoria.delete({
+        await prisma.produto.delete({
             where: {id: req.params.id},
         })
 }catch(err){
