@@ -1,4 +1,5 @@
 import prisma from "../database/client.js";
+import { includeRelations } from "../lib/utils.js";
 
 const controller = {}
 
@@ -14,7 +15,9 @@ controller.create = async function (req, res) {
 
 controller.retrieveAll = async function (req, res) {
     try {
+        const include = includeRelations(req.query);
         const result = await prisma.fornecedor.findMany({
+            include,
             orderBy: [{ razao_social: 'asc' }]
         })
         res.status(200).send(result);
@@ -26,7 +29,9 @@ controller.retrieveAll = async function (req, res) {
 
 controller.retrieveOne = async function (req, res) {
     try {
+        const include = includeRelations(req.query);
         const result = await prisma.fornecedor.findUnique({
+            include,
             where: { id: req.params.id }
         })
         if (result) res.send(result)
