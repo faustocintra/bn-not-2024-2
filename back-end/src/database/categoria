@@ -1,0 +1,22 @@
+[
+  {
+    "id": "66d660561e6743b99839514b",
+    "descricao": "Alimentos e bebidas"
+  },
+  {
+    "id": "66e8c084c339b3a3050f4ff3",
+    "descricao": "Automotivo"
+  },
+  {
+    "id": "66e8c076c339b3a3050f4ff2",
+    "descricao": "Casa e Jardim"
+  },
+  {
+    "id": "66e8c05dc339b3a3050f4ff1",
+    "descricao": "Higiene e Limpeza"
+  },
+  {
+    "id": "66d6613f1e6743b99839514d",
+    "descricao": "Limpeza"
+  }
+]

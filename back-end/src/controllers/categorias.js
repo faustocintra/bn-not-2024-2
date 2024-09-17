@@ -1,4 +1,5 @@
 import prisma from '../database/client.js'
+import { includeRelations } from '../lib/utils.js'
 
 const controller = {} //Objeto vazio
 
@@ -26,9 +27,14 @@ controller.create = async function (req,res) {
 
 controller.retrieveAll = async function (req, res) {
     try {
+
+        // Por padrão, não inclui nenhuma entidade relacionada
+        const include = includeRelations(req.query)
+
         // Manda buscar os dados no servidor
         const result = await prisma.categoria.findMany({
-            orderBy: [{descricao: 'asc'}]
+            orderBy: [{descricao: 'asc'}],
+            include
         })
 
         // Retorna os dados obtidos ao cliente com o status
@@ -43,7 +49,7 @@ controller.retrieveAll = async function (req, res) {
         // HTTP 500: Internal Server Error
         res.status(500).send(error)
     }
- 
+
 }
 
 controller.retrieveOne = async function (req, res) {
@@ -78,7 +84,7 @@ controller.update = async function (req, res) {
          // Busca o documento pelo id passado como parâmetro e, caso
         // o documento seja encontrado, atualiza-o com as informações
         // passadas em req.body
-        
+
         const result = await prisma.categoria.update({
             where: {id: req.params.id},
             data: req.body
@@ -108,7 +114,7 @@ controller.delete = async function (req, res) {
 
 
         // Encontrou e exclui ~> HTTP 204: No Content
-        res.status(204).end()
+         res.status(204).end()
     }
     catch (error) {
         if(error?.error === 'P2025') {
