@@ -27,6 +27,7 @@ model Cliente {
   uf              String
   cep             String
   celular         String
+  vendas          Venda[]
 }
 
 model Fornecedor {
@@ -43,6 +44,7 @@ model Fornecedor {
   uf              String
   cep             String
   celular         String
+  produtos        Produto[]
 }
 
 model Categoria {
@@ -56,9 +58,34 @@ model Produto {
   nome            String
   marca           String
   especificacao   String?
+  quantidade      Float         // Quantidade na embalagem
   unidade_medida  String
   preco_unitario  Float
   qtd_estoque     Float
   categoria_id    String        @db.ObjectId
   categoria       Categoria     @relation(fields: [categoria_id], references: [id])
+  fornecedor_id   String        @db.ObjectId
+  fornecedor      Fornecedor    @relation(fields: [fornecedor_id], references: [id])
+  itens_venda     ItemVenda[]
+}
+
+model ItemVenda {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  num_item        Int           
+  quantidade      Float
+  produto_id      String        @db.ObjectId  
+  produto         Produto       @relation(fields: [produto_id], references: [id])
+  venda_id        String        @db.ObjectId
+  venda           Venda         @relation(fields: [venda_id], references: [id])
+
+  @@unique([id, num_item])
+}
+
+model Venda {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  num_venda       Int           @unique
+  data_hora       DateTime      @default(now())
+  itens           ItemVenda[]
+  cliente_id      String        @db.ObjectId
+  cliente         Cliente       @relation(fields: [cliente_id], references: [id])
 }
