@@ -1,77 +1,98 @@
 import prisma from '../database/client.js'
+import { includeRelations } from '../lib/utils.js'
 
-const controller = {}       // Objeto vazio
+const controller = {}     // Objeto vazio
 
-controller.create = async function(req, res){
-    try{
-      /*
-        Conecta-se ao BD e envia uma instrução de
-        criação de um novo documento, com os dados
-        que estão dentro de req.body
-      */
-     await prisma.categoria.create({ data: req.body })
+controller.create = async function(req, res) {
+  try {
+    /*
+      Conecta-se ao BD e envia uma instrução de
+      criação de um novo documento, com os dados
+      que estão dentro de req.body
+    */
+    await prisma.categoria.create({ data: req.body })
 
-     // Envia uma resposta de sucesso ao front-end
-     // HTTP 201: Created
-     res.status(201).end()
-    }
-    catch(error){
-        // Deu errado: exibe o erro no console do back-end
-        console.log(error)
-
-        // Envia o erro ao front-end, com status 500
-        // HTTP 500: Internal Service Error
-        res.status(500).send(error)
-    }
-}
-
-controller.retrieveAll = async function(req, res) {
-  try{
-    // Manda buscar os dados no servidor
-    const result = await prisma.categoria.findMany({
-      orderBy: [ { descricao: 'asc' } ]
-    })
-
-    // Retorna os dados obtidos ao cliente com o status
-    // HTTP 200: OK (ímplicito)
-    res.send(result)
+    // Envia uma resposta de sucesso ao front-end
+    // HTTP 201: Created
+    res.status(201).end()
   }
-  catch(error){
+  catch(error) {
     // Deu errado: exibe o erro no console do back-end
     console.error(error)
 
     // Envia o erro ao front-end, com status 500
-    // HTTP 500: Internal Service Error
+    // HTTP 500: Internal Server Error
     res.status(500).send(error)
   }
 }
 
-controller.retrieveOne = async function(req, res){
-  try{
+controller.retrieveAll = async function(req, res) {
+  try {
+
+    // Por padrão, não inclui nenhuma entidade relacionada
+    const include = includeRelations(req.query)
+
+    // Verifica na query string da requisição se foi passado
+    // o parâmetro include
+    if(req.query.include) {
+      // Separa os relacionamentos, se mais de um foi passado
+      const relations = req.query.include.split(',')
+      // Inclui os relacionamentos passados no objeto include
+      for(let rel of relations) {
+        include[rel] = true
+      }
+    }
+
+    // Manda buscar os dados no servidor
+    const result = await prisma.categoria.findMany({
+      orderBy: [ { descricao: 'asc' } ],
+      include
+    })
+
+    // Retorna os dados obtidos ao cliente com o status
+    // HTTP 200: OK (implícito)
+    res.send(result)
+  }
+  catch(error) {
+    // Deu errado: exibe o erro no console do back-end
+    console.error(error)
+
+    // Envia o erro ao front-end, com status 500
+    // HTTP 500: Internal Server Error
+    res.status(500).send(error)
+  }
+}
+
+controller.retrieveOne = async function(req, res) {
+  try {
+
+    const include = includeRelations(req.query)
+
     // Manda buscar o documento no servidor usando
     // como critério de busca um id informado no
     // parâmetro da requisição
     const result = await prisma.categoria.findUnique({
-      where: { id: req.params.id}
+      where: { id: req.params.id },
+      include
     })
 
-    // Encontrou o documento -> retorna HTTP 200: OK (ímplicito)
+    // Encontrou o documento ~> retorna HTTP 200: OK (implícito)
     if(result) res.send(result)
-    // Não encontrou o documento -> retorna HTTP 404: Not Found
+    // Não encontrou o documento ~> retorna HTTP 404: Not Found
     else res.status(404).end()
   }
-  catch(error){
+  catch(error) {
     // Deu errado: exibe o erro no console do back-end
     console.error(error)
 
     // Envia o erro ao front-end, com status 500
-    // HTTP 500: Internal Service Error
+    // HTTP 500: Internal Server Error
     res.status(500).send(error)
   }
 }
 
-controller.update = async function(req, res){
-  try{
+controller.update = async function(req, res) {
+  try {
     // Busca o documento pelo id passado como parâmetro e, caso
     // o documento seja encontrado, atualiza-o com as informações
     // passadas em req.body
@@ -80,43 +101,43 @@ controller.update = async function(req, res){
       data: req.body
     })
 
-    // Encontrou e atualizou -> retorna HTTP 204: No Content
-    if(result) return res.status(204).end()
-    // Não encontrou (e não atualizou) -> retorna HTTP 404: Not Found
+    // Encontrou e atualizou ~> retorna HTTP 204: No Content
+    if(result) res.status(204).end()
+    // Não encontrou (e não atualizou) ~> retorna HTTP 404: Not Found
     else res.status(404).end()
   }
-  catch(error){
+  catch(error) {
     // Deu errado: exibe o erro no console do back-end
     console.error(error)
 
     // Envia o erro ao front-end, com status 500
-    // HTTP 500: Internal Service Error
+    // HTTP 500: Internal Server Error
     res.status(500).send(error)
   }
 }
 
-controller.delete = async function(req, res){
-  try{
-    // Buca o documento a ser excluído pelo id passado
+controller.delete = async function(req, res) {
+  try {
+    // Busca o documento a ser excluído pelo id passado
     // como parâmetro e efetua a exclusão caso encontrado
     await prisma.categoria.delete({
       where: { id: req.params.id }
     })
 
-    // Encontrou e excluiu -> HTTP: 204 No Content
+    // Encontrou e excluiu ~> HTTP 204: No Content
     res.status(204).end()
 
   }
-  catch(error){
-    if(error?.code === 'P2025'){
-      // Não encontrou e não excluiu -> HTTP 404: Not Found
+  catch(error) {
+    if(error?.code === 'P2025') {   // Código erro de exclusão no Prisma
+      // Não encontrou e não excluiu ~> HTTP 404: Not Found
       res.status(404).end()
     }
     else {
       // Outros tipos de erro
       console.error(error)
 
-      // Envia o erro ao front-end, com status 50
+      // Envia o erro ao front-end, com status 500
       // HTTP 500: Internal Server Error
       res.status(500).send(error)
     }
