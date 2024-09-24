@@ -12,38 +12,38 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
 model Cliente {
-  id                      String      @id @default(auto()) @map("_id") @db.ObjectId
-  nome                    String
-  cpf                     String      @unique
-  data_nascimento         DateTime
-  email                   String 
-  logradouro              String 
-  num_casa                String 
-  complemento             String?
-  bairro                  String 
-  municipio               String
-  uf                      String
-  cep                     String
-  celular                 String
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  nome            String
+  cpf             String       @unique
+  data_nascimento DateTime?
+  email           String       @unique
+  logradouro      String
+  num_casa        String
+  complemento     String?
+  bairro          String
+  municipio       String
+  uf              String
+  cep             String
+  celular         String
   vendas          Venda[]
 }
 
-
 model Fornecedor {
-  id                      String      @id @default(auto()) @map("_id") @db.ObjectId
-  razao_social            String
-  nome_fantasia           String     
-  cnpj                    String       @unique
-  email                   String       @unique
-  logradouro              String 
-  num_casa                String 
-  complemento             String?
-  bairro                  String 
-  municipio               String
-  uf                      String
-  cep                     String
-  celular                 String
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  razao_social    String
+  nome_fantasia   String?
+  cnpj            String        @unique
+  email           String        @unique
+  logradouro      String
+  num_casa        String
+  complemento     String?
+  bairro          String
+  municipio       String
+  uf              String
+  cep             String
+  celular         String
   produtos        Produto[]
 }
 
