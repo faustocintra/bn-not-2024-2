@@ -21,6 +21,9 @@ function includeRelations(query) {
     else if (relations.includes('itens')){
       include.itens = true
     }
+    // Inclusão do cliente (1º nivel)
+    include.cliente = relations.includes
+    ('cliente')
   }
 
   return include
