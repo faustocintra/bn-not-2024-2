@@ -28,25 +28,13 @@ controller.create = async function(req, res) {
 
 controller.retrieveAll = async function(req, res) {
   try {
-    // Por padrão, não inclui nenhuma entidade relacionada
-    const include = {}
 
-    // Verifica ba query string da requisição se foi passado 
-    // o parâmetro include
-
-  if(req.query.include) {
-    //separa os relacionamentos se mais de um foi passado
-    const relations = req.query.include.split(',')
-    // Inclui os relacionamentos passados no objeto include
-    for(let rel of relations) {
-      include[rel] = true
-    }
-  }
+    const include = includeRelations(req.query)
 
     // Manda buscar os dados no servidor
     const result = await prisma.categoria.findMany({
       orderBy: [ { descricao: 'asc' } ],
-      include: { produtos: true }
+      include
     })
 
     // Retorna os dados obtidos ao cliente com o status
@@ -65,14 +53,15 @@ controller.retrieveAll = async function(req, res) {
 
 controller.retrieveOne = async function(req, res) {
   try {
-
-    const include = includeRelations(req.query)
+    
+    const include = includeRelations(req.query) 
 
     // Manda buscar o documento no servidor usando
     // como critério de busca um id informado no
     // parâmetro da requisição
     const result = await prisma.categoria.findUnique({
-      where: { id: req.params.id }, include
+      where: { id: req.params.id },
+      include
     })
 
     // Encontrou o documento ~> retorna HTTP 200: OK (implícito)
@@ -95,7 +84,7 @@ controller.update = async function(req, res) {
     // Busca o documento pelo id passado como parâmetro e, caso
     // o documento seja encontrado, atualiza-o com as informações
     // passadas em req.body
-    const result = await prisma.categorias.update({
+    const result = await prisma.categoria.update({
       where: { id: req.params.id },
       data: req.body
     })
@@ -116,32 +105,31 @@ controller.update = async function(req, res) {
 }
 
 controller.delete = async function(req, res) {
-    try {
-      // Busca o documento a ser excluido pelo id passado
-      // como parametro e efetua a exclusao caso encontrado
-      await prisma.categorias.delete({
-        where: { id: req.params.id }
-      })
+  try {
+    // Busca o documento a ser excluído pelo id passado
+    // como parâmetro e efetua a exclusão caso encontrado
+    await prisma.categoria.delete({
+      where: { id: req.params.id }
+    })
 
-      // Encontrou e exclui ~> HTTP 204: No Content
-      res.status(204).end()
+    // Encontrou e excluiu ~> HTTP 204: No Content
+    res.status(204).end()
 
+  }
+  catch(error) {
+    if(error?.code === 'P2025') {   // Código erro de exclusão no Prisma
+      // Não encontrou e não excluiu ~> HTTP 404: Not Found
+      res.status(404).end()
     }
-    catch(error) {
-        if(error?.code === 'P2025') { //codigo erro de excluxao no Prisma
-        // Não encontrou e nao excluiu ~> HTTP 404: NOT found
-        res.status(404).end()
-        }
-        else {
-        // Outros tuipos de erro
-        console.error(error)
+    else {
+      // Outros tipos de erro
+      console.error(error)
 
-        //Envia o erro ao front-end, com status 500
-        // HTTP 500: Internal Server Error
-        res.status(500).send(error)
-        }
+      // Envia o erro ao front-end, com status 500
+      // HTTP 500: Internal Server Error
+      res.status(500).send(error)
     }
   }
-  
+}
 
 export default controller

@@ -29,7 +29,7 @@ controller.create = async function(req, res) {
 controller.retrieveAll = async function(req, res) {
   try {
     const include = includeRelations(req.query)
-
+    
     // Manda buscar os dados no servidor
     const result = await prisma.fornecedor.findMany({
       orderBy: [ { razao_social: 'asc' } ],
@@ -52,9 +52,8 @@ controller.retrieveAll = async function(req, res) {
 
 controller.retrieveOne = async function(req, res) {
   try {
-
     const include = includeRelations(req.query)
-
+    
     // Manda buscar o documento no servidor usando
     // como critério de busca um id informado no
     // parâmetro da requisição
@@ -104,32 +103,31 @@ controller.update = async function(req, res) {
 }
 
 controller.delete = async function(req, res) {
-    try {
-      // Busca o documento a ser excluido pelo id passado
-      // como parametro e efetua a exclusao caso encontrado
-      await prisma.fornecedor.delete({
-        where: { id: req.params.id }
-      })
+  try {
+    // Busca o documento a ser excluído pelo id passado
+    // como parâmetro e efetua a exclusão caso encontrado
+    await prisma.fornecedor.delete({
+      where: { id: req.params.id }
+    })
 
-      // Encontrou e exclui ~> HTTP 204: No Content
-      res.status(204).end()
+    // Encontrou e excluiu ~> HTTP 204: No Content
+    res.status(204).end()
 
+  }
+  catch(error) {
+    if(error?.code === 'P2025') {   // Código erro de exclusão no Prisma
+      // Não encontrou e não excluiu ~> HTTP 404: Not Found
+      res.status(404).end()
     }
-    catch(error) {
-        if(error?.code === 'P2025') { //codigo erro de excluxao no Prisma
-        // Não encontrou e nao excluiu ~> HTTP 404: NOT found
-        res.status(404).end()
-        }
-        else {
-        // Outros tuipos de erro
-        console.error(error)
+    else {
+      // Outros tipos de erro
+      console.error(error)
 
-        //Envia o erro ao front-end, com status 500
-        // HTTP 500: Internal Server Error
-        res.status(500).send(error)
-        }
+      // Envia o erro ao front-end, com status 500
+      // HTTP 500: Internal Server Error
+      res.status(500).send(error)
     }
   }
-  
+}
 
 export default controller
