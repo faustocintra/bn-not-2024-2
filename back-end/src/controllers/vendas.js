@@ -1,5 +1,5 @@
 import prisma from '../database/client.js'
-//import { includeRelations } from '../lib/utils.js'
+//import { includeRelations } from '../lib/utiils.js'
 
 //Versão da função inclueRelations() especializada
 //para o controller devendas, lidando com include
@@ -24,10 +24,13 @@ function includeRelations(query) {
       else if(relations.includes('itens')){
           include.itens = true
       }
+
+      //Inclusão do cliente (1º nível)
+      include.client = relations.includes('cliente')
   }
+
   return include
 }
-
 
 const controller = {}     // Objeto vazio
 
