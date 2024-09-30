@@ -1,5 +1,5 @@
 import prisma from '../database/client.js'
-import { includeRelations } from '../lib/utils.js'
+//import { includeRelations } from '../lib/utils.js'
 
 //Versão da função inclueRelations() especializada
 //para o controller devendas, lidando com include
@@ -292,3 +292,5 @@ controller.deleteItem = async function(req, res) {
     }
   }
 }
+
+export default controller
