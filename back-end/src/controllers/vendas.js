@@ -1,6 +1,37 @@
 import prisma from '../database/client.js'
 // import { includeRelations } from '../lib/utils.js'
 
+
+function includeRelations (query) {
+
+  // Por padrão, não inclui nenhum relacionamento
+  const include = {}
+
+  // Se o parâmetro include estiver na query string
+  if(query.include) {
+    // Recorta o valor do parâmetro, separando os
+    // relacionamentos passados por vírgula
+    const relations = query.include.split(',')
+
+    // Include de 2° nível
+    if (relations.includes('itens.produto')) {
+      include.itens = {
+        include: {produto: true}
+      }
+    }
+
+    // Include comum, de 1° nível
+    else if (relations.includes('itens')) {
+      include.itens = true
+    }
+  }
+
+  // Inclusão do cliente (1° Nível)
+  include.cliente = relations.includes('cliente')
+  return include
+}
+
+
 const controller = {}     // Objeto vazio
 
 controller.create = async function(req, res) {
@@ -264,31 +295,4 @@ controller.deleteItem = async function(req, res) {
     }
   }
 }
-
-function includeRelations (query) {
-
-  // Por padrão, não inclui nenhum relacionamento
-  const include = {}
-
-  // Se o parâmetro include estiver na query string
-  if(query.include) {
-    // Recorta o valor do parâmetro, separando os
-    // relacionamentos passados por vírgula
-    const relations = query.include.split(',')
-
-    // Include de 2° nível
-    if (relations.includes('itens.produto')) {
-      include.itens = {
-        include: {produto: true}
-      }
-    }
-
-    // Include comum, de 1° nível
-    else if (relations.includes('itens')) {
-      include.itens = true
-    }
-  }
-  return include
-}
-
 export default controller
