@@ -2,7 +2,7 @@
     Função que processa a query string da requisição e verifica se o parâmetro include foi passado.
     Caso positivo, preenche um objeto com os relacionamentos que devem ser incluidos na consulta sendo executada.
 */
-function includeRelatiosn(query){
+function includeRelations(query){
     // Por padrão, não inclui nenhum relacionamento
     const include = []
     
@@ -20,4 +20,4 @@ function includeRelatiosn(query){
     return include
 }
 
-export { includeRelatiosn }
+export { includeRelations }
