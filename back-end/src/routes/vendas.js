@@ -13,7 +13,7 @@ router.delete('/id:', controller.delete)
 router.post('/:id/items', controller.createItem)
 router.get('/:id/items', controller.retrieveAllItems)
 router.get('/:id/itemId', controller.retrieveOneItem)
-// router.put('/:id/itemId', controller.updateItem)
-// router.delete('/:id/itemId', controller.deleteItem)
+router.put('/:id/itemId', controller.updateItem)
+router.delete('/:id/itemId', controller.deleteItem)
 
 export default router
