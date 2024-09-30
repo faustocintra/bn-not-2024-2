@@ -1,5 +1,24 @@
 import prisma from "../database/client.js";
-import { includeRelations } from "../lib/utils.js";
+// import { includeRelations } from "../lib/utils.js";
+
+function includeRelations(query) {
+    const include = {}
+
+    if (relations.includes('itens.produto')) {
+        include.itens = { include: { produto: true } }
+    } else if (relations.includes('itens')) {
+        include.itens = true
+    }
+
+    if (query.include) {
+        const relations = query.include.split(',')
+        for (let rel of relations) {
+            include[rel] = true
+        }
+    }
+    console.log(include)
+    return include
+}
 
 const controller = {}     // Objeto vazio
 
@@ -203,8 +222,11 @@ controller.retrieveOneItem = async function (req, res) {
 
 controller.updateItem = async function (req, res) {
     try {
-        const result = await prisma.venda.update({
-            where: { id: req.params.id },
+        const result = await prisma.itemVenda.update({
+            where: {
+                id: req.params.itemId,
+                venda_id: req.params.id,
+            },
             data: req.body
         })
 
