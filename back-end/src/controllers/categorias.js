@@ -1,5 +1,5 @@
 import prisma from '../database/client.js'
-import{includeRelations} from '../lib/utils.js'
+import { includeRelations } from '../lib/utils.js'
 
 const controller = {}     // Objeto vazio
 
@@ -29,19 +29,7 @@ controller.create = async function(req, res) {
 controller.retrieveAll = async function(req, res) {
   try {
 
-    // Por padrão, não inclui nenhuma entidade relacionada
-    const include = {}
-
-    // Verifica na query string da requisição se foi passado
-    // o parâmetro include
-    if(req.query.include) {
-      // Separa os relacionamentos, se mais de um foi passado
-      const relations = req.query.include.split(',')
-      // Inclui os relacionamentos passados no objeto include
-      for(let rel of relations) {
-        include[rel] = true
-      }
-    }
+    const include = includeRelations(req.query)
 
     // Manda buscar os dados no servidor
     const result = await prisma.categoria.findMany({
@@ -65,11 +53,15 @@ controller.retrieveAll = async function(req, res) {
 
 controller.retrieveOne = async function(req, res) {
   try {
+    
+    const include = includeRelations(req.query) 
+
     // Manda buscar o documento no servidor usando
     // como critério de busca um id informado no
     // parâmetro da requisição
     const result = await prisma.categoria.findUnique({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
+      include
     })
 
     // Encontrou o documento ~> retorna HTTP 200: OK (implícito)
