@@ -78,7 +78,7 @@ model ItemVenda {
   venda_id        String        @db.ObjectId
   venda           Venda         @relation(fields: [venda_id], references: [id])
 
-  @@unique([id, num_item])
+  @@unique([venda_id, num_item])
 }
 
 model Venda {
