@@ -29,6 +29,7 @@ controller.create = async function(req, res) {
 controller.retrieveAll = async function(req, res) {
   try {
     const include = includeRelations(req.query)
+    
     // Manda buscar os dados no servidor
     const result = await prisma.fornecedor.findMany({
       orderBy: [ { razao_social: 'asc' } ],
@@ -52,12 +53,13 @@ controller.retrieveAll = async function(req, res) {
 controller.retrieveOne = async function(req, res) {
   try {
     const include = includeRelations(req.query)
+    
     // Manda buscar o documento no servidor usando
     // como critério de busca um id informado no
     // parâmetro da requisição
     const result = await prisma.fornecedor.findUnique({
       where: { id: req.params.id },
-      include 
+      include
     })
 
     // Encontrou o documento ~> retorna HTTP 200: OK (implícito)
