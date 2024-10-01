@@ -25,7 +25,12 @@ function includeRelations(query) {
     else if (relations.includes('itens')) {
       include.itens = true
     }
+
+    // Inclusão do cliente (1º nível)
+    include.cliente = relations.includes('cliente')
   }
+
+  return include
 } 
 
 const controller = {}     // Objeto vazio
