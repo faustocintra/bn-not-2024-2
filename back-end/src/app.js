@@ -24,4 +24,7 @@ app.use('/clients', clientsRouter)
 import suppliersRouter from './routes/suppliers.js'
 app.use('/suppliers', suppliersRouter)
 
+import productsRouter from './routes/products.js'
+app.use('/products', productsRouter)
+
 export default app

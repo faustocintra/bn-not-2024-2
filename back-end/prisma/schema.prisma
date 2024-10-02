@@ -14,8 +14,9 @@ datasource db {
 }
 
 model Categoria {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
   descricao String
+  produtos  Produto[]
 }
 
 model Cliente {
@@ -32,14 +33,15 @@ model Cliente {
   uf              String
   cep             String
   celular         String
+  Venda           Venda[]
 }
 
 model Fornecedor {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   razao_social  String
   nome_fantasia String
-  cnpj          String @unique
-  email         String @unique
+  cnpj          String    @unique
+  email         String    @unique
   logradouro    String
   num_casa      String
   complemento   String
@@ -48,4 +50,42 @@ model Fornecedor {
   uf            String
   cep           String
   celular       String
+  Produto       Produto[]
+}
+
+model Produto {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  nome           String
+  marca          String
+  especificacao  String?
+  quantidade     Float // Quantidade na embalagem
+  unidade_medida String
+  preco_unitario Float
+  qtd_estoque    Float
+  categoria_id   String      @db.ObjectId
+  categoria      Categoria   @relation(fields: [categoria_id], references: [id])
+  fornecedor_id  String      @db.ObjectId
+  fornecedor     Fornecedor  @relation(fields: [fornecedor_id], references: [id])
+  itens_venda    ItemVenda[]
+}
+
+model ItemVenda {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  num_item   Int
+  quantidade Float
+  produto_id String  @db.ObjectId
+  produto    Produto @relation(fields: [produto_id], references: [id])
+  venda_id   String  @db.ObjectId
+  venda      Venda   @relation(fields: [venda_id], references: [id])
+
+  @@unique([id, num_item])
+}
+
+model Venda {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  num_venda  Int         @unique
+  data_hora  DateTime    @default(now())
+  itens      ItemVenda[]
+  cliente_id String      @db.ObjectId
+  cliente    Cliente     @relation(fields: [cliente_id], references: [id])
 }
