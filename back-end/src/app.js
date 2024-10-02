@@ -27,4 +27,8 @@ app.use('/suppliers', suppliersRouter)
 import productsRouter from './routes/products.js'
 app.use('/products', productsRouter)
 
+import salesRouter from './routes/sales.js'
+33	+
+app.use('/sales', salesRouter)
+
 export default app
