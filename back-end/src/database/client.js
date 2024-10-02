@@ -10,3 +10,6 @@ prisma.$on('query', event => {
     if (event.params) { console.log('PARAMS', event.params) }
     console.log('-'.repeat(40))
 })
+
+
+export default prisma
