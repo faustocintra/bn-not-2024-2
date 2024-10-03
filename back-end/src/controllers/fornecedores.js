@@ -1,10 +1,11 @@
 import prisma from '../database/client.js'
+import { includeRelations } from '../lib/utils.js'
 
 const controller = {}
 
 controller.create = async function (req, res) {
   try {
-    await prisma.supplier.create({ data: req.body })
+    await prisma.fornecedor.create({ data: req.body })
     res.status(201).end()
   }
   catch (error) {
@@ -16,7 +17,7 @@ controller.create = async function (req, res) {
 controller.retrieveAll = async function (req, res) {
   try {
     const include = includeRelations(req.query)
-    const result = await prisma.supplier.findMany({
+    const result = await prisma.fornecedor.findMany({
       orderBy: [{ razao_social: 'asc' }],
       include
     })
@@ -31,7 +32,7 @@ controller.retrieveAll = async function (req, res) {
 controller.retrieveOne = async function (req, res) {
   try {
     const include = includeRelations(req.query)
-    const result = await prisma.supplier.findUnique({
+    const result = await prisma.fornecedor.findUnique({
       where: { id: req.params.id },
       include
     })
@@ -46,7 +47,7 @@ controller.retrieveOne = async function (req, res) {
 
 controller.update = async function (req, res) {
   try {
-    const result = await prisma.supplier.update({
+    const result = await prisma.fornecedor.update({
       where: { id: req.params.id },
       data: req.body
     })
@@ -61,7 +62,7 @@ controller.update = async function (req, res) {
 
 controller.delete = async function (req, res) {
   try {
-    await prisma.supplier.delete({
+    await prisma.fornecedor.delete({
       where: { id: req.params.id }
     })
     res.status(204).end()
