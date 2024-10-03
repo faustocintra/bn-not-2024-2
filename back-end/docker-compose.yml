@@ -4,7 +4,7 @@ services:
   api:
     build: .
     ports:
-      - "3000:3000"
+      - "8080:8080"
     volumes:
       - .:/app
     environment:
@@ -13,8 +13,12 @@ services:
       - mongo
   mongo:
     image: mongo
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27017:27017"
     volumes:
       - mongodb_data:/data/db
 
 volumes:
   mongodb_data:
+    name: mongodb_data

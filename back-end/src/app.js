@@ -3,7 +3,6 @@ import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 
 import indexRouter from './routes/index.js'
-import usersRouter from './routes/users.js'
 
 const app = express()
 
@@ -13,13 +12,12 @@ app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
 
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
 
 import categoriesRouter from './routes/categories.js'
 app.use('/categories', categoriesRouter)
 
-import clientsRouter from './routes/clients.js'
-app.use('/clients', clientsRouter)
+import clientesRouter from './routes/clientes.js'
+app.use('/clientes', clientesRouter)
 
 import suppliersRouter from './routes/suppliers.js'
 app.use('/suppliers', suppliersRouter)

@@ -12,7 +12,7 @@ function includeRelations(query) {
         else if (relations.includes('items')) {
             include.items = true
         }
-        include.client = relations.includes('client')
+        include.cliente = relations.includes('cliente')
     }
     return include
 }
