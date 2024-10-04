@@ -1,3 +1,4 @@
+
 import prisma from '../database/client.js'
 // import { includeRelations } from '../lib/utils.js'
 
@@ -25,11 +26,7 @@ function includeRelations(query) {
       include.itens = true
     }
 
-    if(relations.include('cliente')){
-      include.cliente - true
-    }
-    
-    // Inclusão do cliente (1° nível)
+    // Inclusão do cliente (1º nível)
     include.cliente = relations.includes('cliente')
   }
 
