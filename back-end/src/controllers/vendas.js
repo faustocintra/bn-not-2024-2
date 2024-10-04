@@ -1,8 +1,10 @@
 import prisma from '../database/client.js'
-//import { includeRelations } from '../lib/utils.js'
+// import { includeRelations } from '../lib/utils.js'
 
+// Versão da função includeRelations() especializada
+// para o controller de vendas, lidando com include
+// de segundo nivel
 function includeRelations(query) {
-
   // Por padrão, não inclui nenhum relacionamento
   const include = {}
 
@@ -11,22 +13,25 @@ function includeRelations(query) {
     // Recorta o valor do parâmetro, separando os
     // relacionamentos passados por vírgula
     const relations = query.include.split(',')
-    //Include de 2º nivel
-    if(relations.includes('itens.produto')){
+
+    // Include de 2º nível
+    if(relations.includes('itens.produto')) {
       include.itens = {
-        include : {produto: true}
+        include: { produto: true }
       }
     }
-    // Include comum, de 1º nivel
-    else if (relations.includes('itens')){
+    // Include comum, de 1º nível
+    else if(relations.includes('itens')) {
       include.itens = true
     }
-    // Inclusão do cliente (1º nivel)
+
+    // Inclusão do cliente (1º nível)
     include.cliente = relations.includes('cliente')
   }
 
   return include
 }
+
 const controller = {}     // Objeto vazio
 
 controller.create = async function(req, res) {
