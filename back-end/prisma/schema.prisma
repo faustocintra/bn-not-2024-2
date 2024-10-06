@@ -13,78 +13,79 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Cliente{
-  id    String    @id @default(auto()) @map("_id") @db.ObjectId
-  nome String
-  cpf String      @unique
+model Cliente {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  nome            String
+  cpf             String       @unique
   data_nascimento DateTime?
-  email String    @unique
-  logradouro String
-  num_casa String
-  complemento String?
-  bairro String
-  municipio String
-  uf String
-  cep String
-  celular String
-  vendas Venda[]
+  email           String       @unique
+  logradouro      String
+  num_casa        String
+  complemento     String?
+  bairro          String
+  municipio       String
+  uf              String
+  cep             String
+  celular         String
+  vendas          Venda[]
 }
 
-model Fornecedor{
-  id    String    @id @default(auto()) @map("_id") @db.ObjectId
-  razao_social String
-  nome_fantasia String?
-  cnpj String @unique
-  email String @unique
-  logradouro String
-  num_casa String
-  complemento String?
-  bairro String
-  municipio String
-  uf String
-  cep String
-  celular String
-  produtos Produto[]
+model Fornecedor {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  razao_social    String
+  nome_fantasia   String?
+  cnpj            String        @unique
+  email           String        @unique
+  logradouro      String
+  num_casa        String
+  complemento     String?
+  bairro          String
+  municipio       String
+  uf              String
+  cep             String
+  celular         String
+  produtos        Produto[]
 }
 
-model Categoria{
-  id    String    @id @default(auto()) @map("_id") @db.ObjectId
-  descricao String
-  produtos Produto[]
-}
-model Produto{
-  id    String    @id @default(auto()) @map("_id") @db.ObjectId
-  nome String
-  marca String
-  quantidade Float
-  especificacao String?
-  unidade_medida String
-  preco_unitario Float
-  qtd_estoque Float
-  categoria_id String @db.ObjectId
-  categoria Categoria @relation(fields: [categoria_id], references: [id])
-  fornecedor_id String @db.ObjectId
-  fornecedor Fornecedor @relation(fields: [fornecedor_id], references: [id])
-  item_venda ItemVenda[]
+model Categoria {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  descricao   String
+  produtos    Produto[]
 }
 
-model ItemVenda{
-  id    String    @id @default(auto()) @map("_id") @db.ObjectId
-  num_item Int
-  quantidade Float
-  produto_id String @db.ObjectId
-  produto Produto @relation(fields: [produto_id], references: [id])
-  venda_id String @db.ObjectId
-  venda Venda @relation(fields: [venda_id], references: [id])
+model Produto {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  nome            String
+  marca           String
+  especificacao   String?
+  quantidade      Float         // Quantidade na embalagem
+  unidade_medida  String
+  preco_unitario  Float
+  qtd_estoque     Float
+  categoria_id    String        @db.ObjectId
+  categoria       Categoria     @relation(fields: [categoria_id], references: [id])
+  fornecedor_id   String        @db.ObjectId
+  fornecedor      Fornecedor    @relation(fields: [fornecedor_id], references: [id])
+  itens_venda     ItemVenda[]
+}
+
+model ItemVenda {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  num_item        Int           
+  quantidade      Float
+  produto_id      String        @db.ObjectId  
+  produto         Produto       @relation(fields: [produto_id], references: [id])
+  venda_id        String        @db.ObjectId
+  venda           Venda         @relation(fields: [venda_id], references: [id])
 
   @@unique([venda_id, num_item])
 }
 
-model Venda{
-  id    String    @id @default(auto()) @map("_id") @db.ObjectId
-  num_venda Int @unique
-  data_hora DateTime @default(now())
-  itens ItemVenda[]
-  cliente_id String @db.ObjectId
-  cliente Cliente @relation(fields: [cliente_id], references: [id])
+model Venda {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  num_venda       Int           @unique
+  data_hora       DateTime      @default(now())
+  itens           ItemVenda[]
+  cliente_id      String        @db.ObjectId
+  cliente         Cliente       @relation(fields: [cliente_id], references: [id])
 }
