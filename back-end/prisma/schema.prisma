@@ -43,7 +43,7 @@ model Fornecedor {
   municipio       String
   uf              String
   cep             String
-  celular         String
+  celular         String?
   produtos        Produto[]
 }
 
