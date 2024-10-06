@@ -15,18 +15,21 @@ app.use(cookieParser())
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 
-/**************Rotas********** */
+/*************** ROTAS *******************/
+
 import categoriasRouter from './routes/categorias.js'
-app.use('/cateorias', categoriasRouter)
+app.use('/categorias', categoriasRouter)
 
-import clientRouter from './routes/client.js'
-app.use('/clientes', clientRouter)
+import clientesRouter from './routes/clientes.js'
+app.use('/clientes', clientesRouter)
 
-import fornecedorRouter from './routes/fornecedor.js'
-app.use('/fornecedor', fornecedorRouter)
+import fornecedoresRouter from './routes/fornecedores.js'
+app.use('/fornecedores', fornecedoresRouter)
 
-import produtoRouter from './routes/produto.js'
-app.use('/produto', produtoRouter)
+import produtosRouter from './routes/produtos.js'
+app.use('/produtos', produtosRouter)
 
+import vendasRouter from './routes/vendas.js'
+app.use('/vendas', vendasRouter)
 
 export default app
