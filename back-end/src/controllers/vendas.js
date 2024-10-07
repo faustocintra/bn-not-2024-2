@@ -5,28 +5,28 @@ import prisma from '../database/client.js'
 //para o controller devendas, lidando com include
 //de segundo nível
 function includeRelations(query) {
-  //Por padrão, não inclui nenhum relacionamento
+  // Por padrão, não inclui nenhum relacionamento
   const include = {}
 
-  //Se o parâmetro include estiver na query string
-  if (query.include){
-      //Recorta o valor do parâmetro,separando os
-      // relacionamento passados por virgula
-      const relations = query.include.split(',');
-      
-      //Include de 2º nível
-      if(relations.includes('itens.produto')){
-        include.itens ={
-          include: { produto:true }
-        }
-      }
-      //include comum de 1º nível
-      else if(relations.includes('itens')){
-          include.itens = true
-      }
+  // Se o parâmentro include estiver na query string
+  if(query.include) {
+    // Recorta o valor do parâmetro, separando os
+    // relacionamentos passados por vírgula
+    const relations = query.include.split(',')
 
-      //Inclusão do cliente (1º nível)
-      include.client = relations.includes('cliente')
+    // Include de 2º nível
+    if(relations.includes('itens.produto')) {
+      include.itens = {
+        include: { produto: true }
+      }
+    }
+    // Include comum, de 1º nível
+    else if(relations.includes('itens')) {
+      include.itens = true
+    }
+
+    // Inclusão do cliente (1º nível)
+    include.cliente = relations.includes('cliente')
   }
 
   return include
