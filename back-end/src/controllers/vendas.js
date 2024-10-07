@@ -5,51 +5,62 @@ const controller = {}     // Objeto vazio
 
 controller.create = async function(req, res) {
   try {
-    /*
-      Conecta-se ao BD e envia uma instrução de
-      criação de um novo documento, com os dados
-      que estão dentro de req.body
-    */
-    await prisma.venda.create({ data: req.body })
+    const { data_hora, num_venda, cliente_id, itens } = req.body;
 
-    // Envia uma resposta de sucesso ao front-end
-    // HTTP 201: Created
-    res.status(201).end()
-  }
-  catch(error) {
-    // Deu errado: exibe o erro no console do back-end
-    console.error(error)
+    // Verifique se pelo menos dois itens foram fornecidos
+    if (!itens || itens.length < 2) {
+      return res.status(400).json({ message: "É necessário fornecer pelo menos dois itens." });
+    }
 
-    // Envia o erro ao front-end, com status 500
-    // HTTP 500: Internal Server Error
-    res.status(500).send(error)
+    // Criação da venda
+    const venda = await prisma.venda.create({
+      data: {
+        data_hora: new Date(data_hora), // Converte a string para Date
+        num_venda, // Inclui num_venda
+        cliente: { connect: { id: cliente_id } }, // Conecta o cliente
+        itens: {
+          create: itens.map((item, index) => ({
+            num_item: index + 1, // Atribui um número sequencial
+            quantidade: item.quantidade,
+            produto: { connect: { id: item.produto_id } } // Conecta o produto
+          }))
+        }
+      }
+    });
+
+    // Responde com status 201 e os dados da venda criada
+    res.status(201).json(venda);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Erro ao criar venda." });
   }
-}
+};
+
+
+
 
 controller.retrieveAll = async function(req, res) {
   try {
-
-    const include = includeRelations(req.query)
-
-    // Manda buscar os dados no servidor
+    // Busca as vendas e inclui os clientes e itens de venda
     const result = await prisma.venda.findMany({
-      orderBy: [ { data_hora: 'asc' } ],
-      include
-    })
+      orderBy: [{ data_hora: 'asc' }],
+      include: {
+        cliente: true, // Inclui o cliente
+        itens: { // Inclui os itens da venda
+          include: {
+            produto: true // Inclui os produtos dos itens
+          }
+        }
+      }
+    });
 
-    // Retorna os dados obtidos ao cliente com o status
-    // HTTP 200: OK (implícito)
-    res.send(result)
+    // Retorna as vendas com status 200
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Erro ao recuperar vendas." });
   }
-  catch(error) {
-    // Deu errado: exibe o erro no console do back-end
-    console.error(error)
-
-    // Envia o erro ao front-end, com status 500
-    // HTTP 500: Internal Server Error
-    res.status(500).send(error)
-  }
-}
+};
 
 controller.retrieveOne = async function(req, res) {
   try {
@@ -104,57 +115,110 @@ controller.update = async function(req, res) {
   }
 }
 
-controller.delete = async function(req, res) {
+controller.updateItem = async function(req, res) {
+  const { itemId, id } = req.params; // Obtém os parâmetros da requisição
+
   try {
-    // Busca o documento a ser excluído pelo id passado
-    // como parâmetro e efetua a exclusão caso encontrado
+    // Atualiza o item da venda
+    await prisma.itemVenda.update({
+      where: {
+        id: itemId,
+        venda_id: id // Verifica se o item pertence à venda
+      },
+      data: req.body // Dados para atualizar
+    });
+
+    // Se a atualização for bem-sucedida, retorna o código 204
+    res.status(204).end();
+  } catch (error) {
+    console.error(error);
+    
+    // Verifica se o erro é porque o item ou a venda não foram encontrados
+    if (error.code === 'P2025') {
+      res.status(404).send({ message: "Item ou venda não encontrado." });
+    } else {
+      res.status(500).send({ message: "Erro ao atualizar item da venda." });
+    }
+  }
+};
+
+
+
+controller.delete = async function(req, res) {
+  const { id } = req.params;
+
+  try {
+    // Primeiro, excluir todos os itens de venda associados
+    await prisma.itemVenda.deleteMany({
+      where: { venda_id: id }
+    });
+
+    // Em seguida, excluir a venda
     await prisma.venda.delete({
-      where: { id: req.params.id }
-    })
+      where: { id }
+    });
 
-    // Encontrou e excluiu ~> HTTP 204: No Content
-    res.status(204).end()
-
-  }
-  catch(error) {
-    if(error?.code === 'P2025') {   // Código erro de exclusão no Prisma
-      // Não encontrou e não excluiu ~> HTTP 404: Not Found
-      res.status(404).end()
-    }
-    else {
-      // Outros tipos de erro
-      console.error(error)
-
-      // Envia o erro ao front-end, com status 500
-      // HTTP 500: Internal Server Error
-      res.status(500).send(error)
+    res.status(204).end();
+  } catch (error) {
+    if (error?.code === 'P2025') {
+      res.status(404).end(); // Venda não encontrada
+    } else {
+      console.error(error);
+      res.status(500).send(error);
     }
   }
-}
+};
 
 /***************************************************************/
 
 controller.createItem = async function(req, res) {
+  const { id } = req.params; // ID da venda
+  const { produto_id, quantidade } = req.body; // Dados do item a ser inserido
+
   try {
-    // Adiciona no corpo da requisição o id da venda,
-    // passado como parâmetro na rota
-    req.body.venda_id = req.params.id
+    // Verifica se a venda existe
+    const vendaExistente = await prisma.venda.findUnique({
+      where: { id },
+      include: { itens: true } // Inclui os itens para contar
+    });
 
-    await prisma.itemVenda.create({ data: req.body })
+    if (!vendaExistente) {
+      return res.status(404).send({ message: "Venda não encontrada." });
+    }
 
-    // Envia uma resposta de sucesso ao front-end
-    // HTTP 201: Created
-    res.status(201).end()
+    // Verifica se o produto existe
+    const produtoExistente = await prisma.produto.findUnique({
+      where: { id: produto_id },
+    });
+
+    if (!produtoExistente) {
+      return res.status(404).send({ message: "Produto não encontrado." });
+    }
+
+    // Criação do novo item de venda
+    const novoItem = await prisma.itemVenda.create({
+      data: {
+        num_item: vendaExistente.itens.length + 1, // Gera número sequencial
+        quantidade,
+        produto: { connect: { id: produto_id } }, // Conectar ao produto existente
+        venda: { connect: { id } } // Conectar à venda existente
+      }
+    });
+
+    // Retorna o novo item de venda com status 201
+    res.status(201).json(novoItem);
+  } catch (error) {
+    console.error(error);
+    
+    // Verifica se o erro é porque a venda ou o produto não foram encontrados
+    if (error.code === 'P2025') {
+      res.status(404).send({ message: "Venda ou produto não encontrado." });
+    } else {
+      res.status(500).send({ message: "Erro ao adicionar item à venda." });
+    }
   }
-  catch(error) {
-    // Deu errado: exibe o erro no console do back-end
-    console.error(error)
+};
 
-    // Envia o erro ao front-end, com status 500
-    // HTTP 500: Internal Server Error
-    res.status(500).send(error)
-  }
-}
 
 controller.retrieveAllItems = async function(req, res) {
   try {

@@ -41,6 +41,8 @@ controller.retrieveAll = async function(req, res) {
     // HTTP 200: OK (implícito)
     res.send(result)
   }
+
+  
   catch(error) {
     // Deu errado: exibe o erro no console do back-end
     console.error(error)
@@ -50,6 +52,29 @@ controller.retrieveAll = async function(req, res) {
     res.status(500).send(error)
   }
 }
+
+controller.retrieveTwoProductsWithSupplier = async function(req, res) {
+  try {
+    // Busca dois produtos, incluindo as informações do fornecedor
+    const produtos = await prisma.produto.findMany({
+      include: {
+        fornecedor: true, // Inclui as informações do fornecedor
+      },
+      take: 2, // Limita a busca a 2 produtos
+      orderBy: { nome: 'asc' } // Ordena pelo nome, se desejar
+    });
+
+    // Verifica se encontrou produtos
+    if (produtos.length > 0) {
+      res.status(200).json(produtos); // Retorna os produtos encontrados
+    } else {
+      res.status(404).send({ message: "Nenhum produto encontrado." }); // Retorna 404 se não encontrar produtos
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error); // Erro do servidor
+  }
+};
 
 controller.retrieveOne = async function(req, res) {
   try {
@@ -106,30 +131,29 @@ controller.update = async function(req, res) {
 
 controller.delete = async function(req, res) {
   try {
-    // Busca o documento a ser excluído pelo id passado
-    // como parâmetro e efetua a exclusão caso encontrado
+    // Deleta todos os itens de venda que referenciam este produto
+    await prisma.itemVenda.deleteMany({
+      where: { produto_id: req.params.id }
+    });
+
+    // Agora, deleta o produto
     await prisma.produto.delete({
       where: { id: req.params.id }
-    })
+    });
 
-    // Encontrou e excluiu ~> HTTP 204: No Content
-    res.status(204).end()
-
-  }
-  catch(error) {
-    if(error?.code === 'P2025') {   // Código erro de exclusão no Prisma
+    // Retorna sucesso
+    res.status(204).end();
+  } catch (error) {
+    if (error?.code === 'P2025') {
       // Não encontrou e não excluiu ~> HTTP 404: Not Found
-      res.status(404).end()
-    }
-    else {
+      res.status(404).end();
+    } else {
       // Outros tipos de erro
-      console.error(error)
-
-      // Envia o erro ao front-end, com status 500
-      // HTTP 500: Internal Server Error
-      res.status(500).send(error)
+      console.error(error);
+      res.status(500).send(error);
     }
   }
-}
+};
+
 
 export default controller
