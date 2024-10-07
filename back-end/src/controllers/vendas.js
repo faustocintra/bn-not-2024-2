@@ -25,9 +25,8 @@ function includeRelations(query) {
       include.itens = true
     }
 
-    // Inclusão do cliente (1° nível)
-    include.cliente = relations.includes
-      ('cliente')
+    // Inclusão do cliente (1º nível)
+    include.cliente = relations.includes('cliente')
   }
 
   return include
@@ -298,4 +297,3 @@ controller.deleteItem = async function(req, res) {
 }
 
 export default controller
-
