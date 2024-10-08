@@ -1,5 +1,7 @@
 version: '3.7'
-
+networks:
+  minha_rede:
+    driver: bridge
 services:
   api:
     build: .
@@ -7,13 +9,20 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
-    environment:
-      - DATABASE_URL=mongodb://mongo:27017/mydatabase
-    depends_on: 
+    networks:
+      - minha_rede
+    depends_on:
       - mongo
   mongo:
-    image: mongo
-    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    build: ./mongo_rs
+    networks:
+      - minha_rede
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: usuario
+      MONGO_INITDB_ROOT_PASSWORD: senhaaaaaaa
+      MONGO_INITDB_DATABASE: aulas_mongo
+      MONGO_REPLICA_HOST: mongo
+      MONGO_REPLICA_PORT: 27017
     ports:
       - "27017:27017"
     volumes:

@@ -5,7 +5,7 @@ const controller = {}
 
 controller.create = async function(req, res) {
   try {
-    await prisma.product.create({ data: req.body })
+    await prisma.produto.create({ data: req.body })
     res.status(201).end()
   }
   catch(error) {
@@ -16,8 +16,10 @@ controller.create = async function(req, res) {
 
 controller.retrieveAll = async function(req, res) {
   try {
+    console.log('Prisma Client Produto:', prisma.produto);
+    console.log('Query params:', req.query);
     const include = includeRelations(req.query)
-    const result = await prisma.product.findMany({
+    const result = await prisma.produto.findMany({
       include,
       orderBy: [ { nome: 'asc' } ]
     })
@@ -32,7 +34,7 @@ controller.retrieveAll = async function(req, res) {
 controller.retrieveOne = async function(req, res) {
   try {
     const include = includeRelations(req.query)
-    const result = await prisma.product.findUnique({
+    const result = await prisma.produto.findUnique({
       where: { id: req.params.id },
       include
     })
@@ -47,7 +49,7 @@ controller.retrieveOne = async function(req, res) {
 
 controller.update = async function(req, res) {
   try {
-    const result = await prisma.product.update({
+    const result = await prisma.produto.update({
       where: { id: req.params.id },
       data: req.body
     })
@@ -62,7 +64,7 @@ controller.update = async function(req, res) {
 
 controller.delete = async function(req, res) {
   try {
-    await prisma.product.delete({
+    await prisma.produto.delete({
       where: { id: req.params.id }
     })
     res.status(204).end()
