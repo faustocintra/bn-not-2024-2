@@ -1,9 +1,9 @@
 import prisma from '../database/client.js'
 //import { includeRelations } from '../lib/utiils.js'
 
-//Versão da função inclueRelations() especializada
-//para o controller devendas, lidando com include
-//de segundo nível
+// Versão da função includeRelations() especializada
+// para o controller de vendas, lidando com include
+// de segundo nivel
 function includeRelations(query) {
   // Por padrão, não inclui nenhum relacionamento
   const include = {}
