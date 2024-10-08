@@ -47,8 +47,8 @@ model Fornecedor {
     bairro        String
     municipio     String
     uf            String
-    ce0           String
-    celula        String
+    cep           String
+    celular       String
     Produto       Produto[]
 }
 
@@ -70,12 +70,12 @@ model Produto {
     marca          String
     especificacao  String?
     quantidade     Float
-    unidade_medica String
+    unidade_medida String
     preco_unitario Float
     qtd_estoque    Float
     categoria_id   String      @db.ObjectId
     categoria      Categoria   @relation(fields: [categoria_id], references: [id])
-    fornecdor_id   String      @db.ObjectId
+    fornecedor_id  String      @db.ObjectId
     fornecedor     Fornecedor  @relation(fields: [categoria_id], references: [id])
     ItemVenda      ItemVenda[]
 }

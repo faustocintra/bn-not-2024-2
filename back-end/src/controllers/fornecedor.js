@@ -63,7 +63,7 @@ controller.delete = async function (req, res) {
         const result = await prisma.fornecedor.delete({
             where: { id: req.params.id }
         })
-        if (result) res.status(202).end()
+        if (result) res.status(204).end()
         else res.status(404).end();
     } catch (error) {
         console.error(error);

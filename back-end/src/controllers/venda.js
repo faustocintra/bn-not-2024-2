@@ -2,30 +2,7 @@ import prisma from '../database/client.js'
 import { includeRelations } from '../lib/utils.js'
 
 const controller = {}
-function includeRelations(query) {
-    // Por padrão, não inclui nenhum relacionamento
-    const include = {}
 
-    // Se o parâmentro include estiver na query string
-    if (query.include) {
-        // Recorta o valor do parâmetro, separando os
-        // relacionamentos passados por vírgula
-        const relations = query.include.split(',')
-
-        // Include de 2º nível
-        if (relations.includes('itens.produto')) {
-            include.itens = {
-                include: { produto: true }
-            }
-        }
-        // Include comum, de 1º nível
-        else if (relations.includes('itens')) {
-            include.itens = true
-        }
-    }
-
-    return include
-}
 
 controller.create = async function (req, res) {
     try {
